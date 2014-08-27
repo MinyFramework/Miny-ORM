@@ -27,7 +27,7 @@ class Module extends \Miny\Modules\Module
 
     public function init(BaseApplication $app)
     {
-        $entityManager = $app->getContainer()->get(__NAMESPACE__ . '\\EntityManager');
+        $entityManager = $app->getContainer()->get('ORMiny\\EntityManager');
         $entityManager->setDefaultNamespace($this->getConfiguration('defaultNamespace', ''));
         foreach ($this->getConfiguration('entityMap') as $entityName => $className) {
             $entityManager->register($entityName, $className);

@@ -9,7 +9,7 @@
         "miny/framework": "dev-master",
         "miny/dbal": "dev-master",
         "miny/annotation": "dev-master",
-        "miny/validator": "dev-master"
+        "bugadani/orminy": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.2.*"
