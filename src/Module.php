@@ -16,7 +16,8 @@ class Module extends \Miny\Modules\Module
     public function defaultConfiguration()
     {
         return [
-            'entityMap' => []
+            'entityMap' => [],
+            'driver'    => 'ORMiny\\Drivers\\AnnotationMetadataDriver'
         ];
     }
 
@@ -27,7 +28,10 @@ class Module extends \Miny\Modules\Module
 
     public function init(BaseApplication $app)
     {
-        $entityManager = $app->getContainer()->get('ORMiny\\EntityManager');
+        $container = $app->getContainer();
+        $container->addAlias('ORMiny\\Driver', $this->getConfiguration('driver'));
+
+        $entityManager = $container->get('ORMiny\\EntityManager');
         $entityManager->setDefaultNamespace($this->getConfiguration('defaultNamespace', ''));
         foreach ($this->getConfiguration('entityMap') as $entityName => $className) {
             $entityManager->register($entityName, $className);
