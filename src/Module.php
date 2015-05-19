@@ -29,7 +29,7 @@ class Module extends \Miny\Modules\Module
     public function init(BaseApplication $app)
     {
         $container = $app->getContainer();
-        $container->addAlias('ORMiny\\Driver', $this->getConfiguration('driver'));
+        $container->addAlias('ORMiny\\MetadataDriverInterface', $this->getConfiguration('driver'));
 
         $entityManager = $container->get('ORMiny\\EntityManager');
         $entityManager->setDefaultNamespace($this->getConfiguration('defaultNamespace', ''));
