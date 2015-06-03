@@ -10,6 +10,8 @@
 namespace Modules\ORM;
 
 use Miny\Application\BaseApplication;
+use Miny\CoreEvents;
+use ORMiny\EntityManager;
 
 class Module extends \Miny\Modules\Module
 {
@@ -31,10 +33,24 @@ class Module extends \Miny\Modules\Module
         $container = $app->getContainer();
         $container->addAlias('ORMiny\\MetadataDriverInterface', $this->getConfiguration('driver'));
 
+        /** @var EntityManager $entityManager */
         $entityManager = $container->get('ORMiny\\EntityManager');
         $entityManager->setDefaultNamespace($this->getConfiguration('defaultNamespace', ''));
         foreach ($this->getConfiguration('entityMap') as $entityName => $className) {
             $entityManager->register($entityName, $className);
         }
+    }
+
+    public function eventHandlers()
+    {
+        $container = $this->application->getContainer();
+        return array(
+            CoreEvents::SHUTDOWN,
+            function() use($container) {
+                /** @var EntityManager $entityManager */
+                $entityManager = $container->get('ORMiny\\EntityManager');
+                $entityManager->commit();
+            }
+        );
     }
 }
