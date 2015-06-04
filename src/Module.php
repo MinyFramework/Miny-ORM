@@ -19,7 +19,7 @@ class Module extends \Miny\Modules\Module
     {
         return [
             'entityMap' => [],
-            'driver'    => 'ORMiny\\Drivers\\AnnotationMetadataDriver'
+            'driver' => 'ORMiny\\Drivers\\AnnotationMetadataDriver'
         ];
     }
 
@@ -44,13 +44,12 @@ class Module extends \Miny\Modules\Module
     public function eventHandlers()
     {
         $container = $this->application->getContainer();
-        return array(
-            CoreEvents::SHUTDOWN,
-            function() use($container) {
+        return [
+            CoreEvents::SHUTDOWN => function () use ($container) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $container->get('ORMiny\\EntityManager');
                 $entityManager->commit();
             }
-        );
+        ];
     }
 }
