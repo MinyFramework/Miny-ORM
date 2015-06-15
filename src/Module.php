@@ -11,6 +11,7 @@ namespace Modules\ORM;
 
 use Miny\Application\BaseApplication;
 use Miny\CoreEvents;
+use Miny\Log\Log;
 use ORMiny\EntityManager;
 
 class Module extends \Miny\Modules\Module
@@ -48,7 +49,14 @@ class Module extends \Miny\Modules\Module
             CoreEvents::SHUTDOWN => function () use ($container) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $container->get('ORMiny\\EntityManager');
-                $entityManager->commit();
+                try {
+                    $entityManager->commit();
+                } catch (\Exception $e) {
+                    /** @var Log $log */
+                    $log = $container->get('Miny\\Log\\Log');
+                    $log->write(Log::ERROR, 'Miny-ORM', $e->getMessage());
+                    $log->write(Log::ERROR, 'Miny-ORM', $e->getTraceAsString());
+                }
             }
         ];
     }
