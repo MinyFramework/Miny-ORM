@@ -49,11 +49,18 @@ class Module extends \Miny\Modules\Module
             CoreEvents::SHUTDOWN => function () use ($container) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $container->get('ORMiny\\EntityManager');
+                /** @var Log $log */
+                $log = $container->get('Miny\\Log\\Log');
+
+                foreach ($entityManager->getPendingQueries() as $array) {
+                    list($query, $params) = $array;
+
+                    $log->write(Log::ERROR, 'Miny-ORM', 'Pending query: ' . $query . ' - Parameters: "' . implode('", "', $params) . '""');
+                }
+
                 try {
                     $entityManager->commit();
                 } catch (\Exception $e) {
-                    /** @var Log $log */
-                    $log = $container->get('Miny\\Log\\Log');
                     $log->write(Log::ERROR, 'Miny-ORM', $e->getMessage());
                     $log->write(Log::ERROR, 'Miny-ORM', $e->getTraceAsString());
                 }
