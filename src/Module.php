@@ -55,7 +55,7 @@ class Module extends \Miny\Modules\Module
                 foreach ($entityManager->getPendingQueries() as $array) {
                     list($query, $params) = $array;
 
-                    $log->write(Log::ERROR, 'Miny-ORM', 'Pending query: ' . $query . ' - Parameters: "' . implode('", "', $params) . '"');
+                    $log->write(Log::DEBUG, 'Miny-ORM', 'Pending query: ' . $query . ' - Parameters: "' . implode('", "', $params) . '"');
                 }
 
                 try {
