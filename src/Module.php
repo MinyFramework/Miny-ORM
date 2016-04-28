@@ -52,10 +52,10 @@ class Module extends \Miny\Modules\Module
                 /** @var Log $log */
                 $log = $container->get('Miny\\Log\\Log');
 
-                foreach ($entityManager->getPendingQueries() as $array) {
-                    list($query, $params) = $array;
-
-                    $log->write(Log::DEBUG, 'Miny-ORM', 'Pending query: ' . $query . ' - Parameters: "' . implode('", "', $params) . '"');
+                /** @var \ORMiny\PendingQuery $pendingQuery */
+                foreach ($entityManager->getPendingQueries() as $pendingQuery) {
+                    $paramList = implode('", "', $pendingQuery->parameters);
+                    $log->write(Log::DEBUG, 'Miny-ORM', "Pending query: {$pendingQuery->query} - Parameters: \"{$paramList}\"");
                 }
 
                 try {
